@@ -1,0 +1,27 @@
+import cv2
+
+image = cv2.imread('bus-sign.jpg')
+
+hsv_img = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+color_low = (30, 110, 140)
+color_high = (65,255, 255)
+
+only_object = cv2.inRange(hsv_img,color_low,color_high)
+cv2.imshow("white", only_object)
+
+moments = cv2.moments(only_object, 1)
+
+x_moment = moments['m01']
+y_moment = moments['m10']
+area = moments['m00']
+
+x = int(x_moment/area)
+y = int(y_moment/area)
+
+print(x,y)
+cv2.putText(image, "Yellow Sign", (y - 100,x), cv2.FONT_HERSHEY_COMPLEX, 1, (255,0,0), 2)
+cv2.putText(image, "%d, %d" %(y,x), (y - 100,x + 100), cv2.FONT_HERSHEY_COMPLEX, 1, (255,0,0), 2)
+
+cv2.imshow("found", image)
+cv2.waitKey(0)
